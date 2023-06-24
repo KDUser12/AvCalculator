@@ -1,2 +1,2 @@
 # CalculApp
- CalculApp est un logiciel open-source 100% français, qui permet de calculer une moyenne générale.
+ CalculApp est un logiciel open-source 100% français, qui permet de calculer une moyenne.
