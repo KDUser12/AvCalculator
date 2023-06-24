@@ -1,38 +1,59 @@
 import customtkinter
-
 from PIL import Image
+
 from tkinter import END
 
-from cache.app import calculate
+import statistics
 
-app = customtkinter.CTk()
+class App(customtkinter.CTk):
 
-customtkinter.set_appearance_mode('dark')
-customtkinter.set_default_color_theme('dark-blue')
+    customtkinter.set_appearance_mode('dark')
+    customtkinter.set_default_color_theme('dark-blue')
+
+
+    def __init__(self):
+        super().__init__()
+        self.title('CalculApp')
+        self.iconbitmap('assets/icons/CalculApp_icon_Windows.ico')
+
+        self.geometry('350x500')
+        self.resizable(False, False)
         
-app.title('CalculApp')
+        title_image = customtkinter.CTkImage(Image.open('assets/icons/CalculApp_icon_Windows.ico'), size=(30, 30))
+        title_font = customtkinter.CTkFont(family='Roboto', size=30, weight='bold')
+        title_label = customtkinter.CTkLabel(master=self, width=350, height=75, text=' CalculApp', font=title_font, image=title_image, compound='left')
+        title_label.grid()
 
-app.geometry('350x500')
-app.resizable(False, False)
+        textbox = customtkinter.CTkTextbox(master=self, width=250, height=300, activate_scrollbars=False)
+        textbox.grid()
 
-title_image = customtkinter.CTkImage(Image.open("assets/icons/CustomTkinter_icon_Windows.ico"),size=(30, 30))
-title_font = customtkinter.CTkFont(family='Roboto', size= 30, weight='bold')
-title = customtkinter.CTkLabel(master=app, width=350, height=75, text=' CalculApp', font=title_font,
-                                        image=title_image, compound='left')
-title.grid()
+        button_font = customtkinter.CTkFont(family='Roboto', size=15)
+        button = customtkinter.CTkButton(master=self, height=25, width=150, text="Entrer", font=button_font, command=lambda: action_button(textbox, text_label))
+        button.grid(pady=25)
+
+        text_label = customtkinter.CTkLabel(master=self, height=20, width= 350, text='Résultat', fg_color='#585858')
+        text_label.grid(pady=30)
         
-textbox = customtkinter.CTkTextbox(master=app, width=250, height=250, activate_scrollbars=False)
-textbox.grid()
 
-def action_button():
-        arg1 = textbox.get("1.0", END)
-        calculate(arg1)
+def action_button(textbox, text_label):
+    arg1 = textbox.get("1.0", END)
+    words = arg1.split()
+    numbers = []
 
-button_font = customtkinter.CTkFont(family='Roboto', size=15)
-button = customtkinter.CTkButton(master=app, height=25, width=150, text="Entrer", font=button_font, command=action_button)
-button.grid(pady=35)
+    for word in words:
+        try:
+            number = float(word)
+            numbers.append(number)
+        except ValueError:
+            pass
 
-text = customtkinter.CTkLabel(master=app, height=20, width= 350, text='Résultat', fg_color='#585858')
-text.grid(pady=60)
+    if numbers:
+        result = statistics.mean(numbers)
+        text_label.configure(text=result)
+    else:
+        text_label.configure(text="Aucune donnée disponible")
 
-app.mainloop()
+    return 0
+
+window = App()
+window.mainloop()
