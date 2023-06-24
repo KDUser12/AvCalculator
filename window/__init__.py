@@ -1,23 +1,19 @@
 import customtkinter
 from PIL import Image
 from tkinter import END
-
 import statistics
 
 class App(customtkinter.CTk):
-
-    customtkinter.set_appearance_mode('dark')
-    customtkinter.set_default_color_theme('dark-blue')
-
-
     def __init__(self):
         super().__init__()
         self.title('CalculApp')
         self.iconbitmap('assets/icons/CalculApp_icon_Windows.ico')
-
         self.geometry('350x500')
         self.resizable(False, False)
-        
+
+        customtkinter.set_appearance_mode('dark')
+        customtkinter.set_default_color_theme('dark-blue')
+
         title_image = customtkinter.CTkImage(Image.open('assets/icons/CalculApp_icon_Windows.ico'), size=(30, 30))
         title_font = customtkinter.CTkFont(family='Roboto', size=30, weight='bold')
         title_label = customtkinter.CTkLabel(master=self, width=350, height=75, text=' CalculApp', font=title_font, image=title_image, compound='left')
@@ -36,14 +32,18 @@ class App(customtkinter.CTk):
         checkbox.grid()
 
         button_font = customtkinter.CTkFont(family='Roboto', size=15)
-        button = customtkinter.CTkButton(master=self, height=25, width=150, text="Entrer", font=button_font, command=lambda: action_button(textbox, text_label, check_var))
+        button = customtkinter.CTkButton(master=self, height=25, width=150, text="Entrer", font=button_font, command=lambda: action_button(self))
         button.grid(pady=20)
 
-        text_label = customtkinter.CTkLabel(master=self, height=20, width= 350, text='Résultat', fg_color='transparent')
+        text_label = customtkinter.CTkLabel(master=self, height=20, width=350, text='Résultat', fg_color='transparent')
         text_label.grid()
-        
-def action_button(textbox, text_label, check_var):
-    arg1 = textbox.get("1.0", END)
+
+        self.textbox = textbox
+        self.text_label = text_label
+        self.check_var = check_var
+
+def action_button(self):
+    arg1 = self.textbox.get("1.0", END)
     words = arg1.split()
     numbers = []
 
@@ -56,12 +56,11 @@ def action_button(textbox, text_label, check_var):
 
     if numbers:
         result = statistics.mean(numbers)
-        text_label.configure(text=result)
-
+        self.text_label.configure(text=result)
     else:
-        text_label.configure(text="Aucune donnée disponible")
+        self.text_label.configure(text="Aucune donnée disponible")
 
-    if check_var.get() == "on":
+    if self.check_var.get() == "on":
         with open('window/cache/data.dat', 'w') as file:
             file.write(' '.join(map(str, numbers)))
 
