@@ -1,5 +1,4 @@
-from window.__init__ import *
-from window.cache.app import *
+import subprocess
 
 if __name__ == '__main__':
-    app()
+    subprocess.run(['python', 'window/__init__.py'])

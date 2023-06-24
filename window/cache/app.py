@@ -1,3 +1,6 @@
+from customtkinter import *
+from window.__init__ import text
+
 import statistics
 
 def calculate(arg1):
@@ -11,6 +14,7 @@ def calculate(arg1):
             pass
 
     result = statistics.mean(numbers)
-    
+    # text.config(text=numbers)
+    # text.grid()
 
     return numbers, result
