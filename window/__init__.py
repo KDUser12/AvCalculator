@@ -1,6 +1,5 @@
 import customtkinter
 from PIL import Image
-
 from tkinter import END
 
 import statistics
