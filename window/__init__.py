@@ -26,15 +26,23 @@ class App(customtkinter.CTk):
         textbox = customtkinter.CTkTextbox(master=self, width=250, height=300, activate_scrollbars=False)
         textbox.grid()
 
+        with open('window/cache/data.dat', 'r') as file:
+            content = file.read()
+        textbox.insert(END, content)
+
+        check_var = customtkinter.StringVar(value="on")
+        checkbox_font = customtkinter.CTkFont(family='Roboto', size=12)
+        checkbox = customtkinter.CTkCheckBox(master=self, height=40, width=150, text='Sauvegarder les informations', font=checkbox_font, variable=check_var, onvalue="on", offvalue="off", checkbox_width=20, checkbox_height=20, corner_radius=5, border_width=1)
+        checkbox.grid()
+
         button_font = customtkinter.CTkFont(family='Roboto', size=15)
-        button = customtkinter.CTkButton(master=self, height=25, width=150, text="Entrer", font=button_font, command=lambda: action_button(textbox, text_label))
-        button.grid(pady=25)
+        button = customtkinter.CTkButton(master=self, height=25, width=150, text="Entrer", font=button_font, command=lambda: action_button(textbox, text_label, check_var))
+        button.grid(pady=20)
 
-        text_label = customtkinter.CTkLabel(master=self, height=20, width= 350, text='Résultat', fg_color='#585858')
-        text_label.grid(pady=30)
+        text_label = customtkinter.CTkLabel(master=self, height=20, width= 350, text='Résultat', fg_color='transparent')
+        text_label.grid()
         
-
-def action_button(textbox, text_label):
+def action_button(textbox, text_label, check_var):
     arg1 = textbox.get("1.0", END)
     words = arg1.split()
     numbers = []
@@ -49,10 +57,15 @@ def action_button(textbox, text_label):
     if numbers:
         result = statistics.mean(numbers)
         text_label.configure(text=result)
+
     else:
         text_label.configure(text="Aucune donnée disponible")
 
-    return 0
+    if check_var.get() == "on":
+        with open('window/cache/data.dat', 'w') as file:
+            file.write(' '.join(map(str, numbers)))
+
+    return numbers
 
 window = App()
 window.mainloop()
